@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>Malaria diagnosis </title>
+   
+</head>
+<body>
+    
+    <input id="image_selector" type="file"/>
+    <button id="predict_button" type="button">Predict</button>  
+    <button id="generate_pdf" type="button">Generate PDF</button>
+	
+    <div class="row">
+        <div class="col" style="float:left;  width:50%; height:50%">
+        <p>Selected Image</p>
+        <img id="selected_image" style="max-width:100%; max-height:100%;" src= ""/>
+        </div>
+        <div class="col" style="float:left; width:50%; height:50%">
+        <p>Predicted Image</p>
+        <img id="predicted_image" style="max-width:100%; max-height:100%;" src= ""/>
+        <p id="count"></P>
+        </div>
+    </div>
+    
+    
+    <script src= "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script>
+        let base64Image;
+        let predictedImage;
+        $("#image_selector").change(function(){
+        let reader = new FileReader();
+        reader.onload = function(e){
+            let dataURL = reader.result;
+            $("#selected_image").attr("src",dataURL);
+            base64Image = dataURL.replace("data:image/jpeg;base64,","");
+            console.log(base64Image);
+            }
+        reader.readAsDataURL($("#image_selector")[0].files[0]);
+        })
+        
+        $("#predict_button").click(function(){
+            let message= {
+                image: base64Image}
+            $.post("http://127.0.0.1:5000/predict",JSON.stringify(message),function(response){
+                predictedImage = `data:image/jpeg;base64,${response.predicted_image}`
+                $("#count").text(`There are ${response.count} malaria parasites found in the image.`)
+                $("#predicted_image").attr("src",predictedImage);
+                })
+            })
+        $("#generate_pdf").click(function(){
+            widows.replace("http://127.0.0.1:5000/static/save_report.html/?predictedImage="+predictedImage);})
+    
+    </script>
+</body>
+
+</html>
