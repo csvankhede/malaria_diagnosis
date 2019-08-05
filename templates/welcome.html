@@ -1,0 +1,227 @@
+{% block body %}
+{% if session['logged in']%}
+
+You are logged in already!!!
+
+{% else %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Malaria Diagnosis</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/simple-line-icons/css/simple-line-icons.css')}}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static', filename='css/landing-page.min.css')}}" rel="stylesheet">
+<style type="text/css">
+	.login-form {
+		width: 340px;
+    	margin: 50px auto;
+	}
+    .login-form form {
+    	margin-bottom: 15px;
+        background: #f7f7f7;
+        box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+    }
+    .login-form h2 {
+        margin: 0 0 15px;
+    }
+    .form-control, .btn {
+        min-height: 38px;
+        border-radius: 2px;
+    }
+    .btn {        
+        font-size: 15px;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-light bg-light static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Malaria Diagnosis</a>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SignIn">
+    SignIn
+  </button>
+    </div>
+  </nav>
+<div class="modal" id="SignIn">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="login-form">
+            <form action='/login' method='POST'>
+            <h2 class="text-center">Log in</h2> 
+            <div class="form-group">
+                {% import "bootstrap/wtf.html" as wtf %}
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.user_id) }}
+            </div>
+            <div class="form-group">
+                {{ wtf.form_field(form.password)}}
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-block" value="Log in">
+            </div>
+            </form>
+    
+            <p class="text-center"><a href="/signup">Create an Account</a></p>
+        </div>
+        </div>
+        
+      </div>
+    </div>
+   </div>
+   <div class="modal" id="SignUp">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="login-form">
+    <form action='/signup' method='POST'>
+    <h2 class="text-center">Sign Up</h2> 
+    <div class="form-group">
+    {% import "bootstrap/wtf.html" as wtf %}
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.user_id) }}
+    </div>
+    <div class="form-group">
+    
+    {{ wtf.form_field(form.name)}}
+    </div>
+    <div class="form-group">
+    
+    {{ wtf.form_field(form.age)}}
+    </div>
+    <div class="form-group">
+    {{ wtf.form_field(form.gender)}}
+    
+    </div>
+    <div class="form-group">
+    
+    {{ wtf.form_field(form.email)}}
+    </div>
+    <div class="form-group">
+    
+    {{ wtf.form_field(form.password)}}
+    </div>
+    <div class="form-group">
+    <input type="submit" class="btn btn-primary btn-block" value="Sign Up">
+    </div>
+    </form>
+    <p class="text-center"><a href="hello.html">Already have an account, Log In</a></p></div>
+        </div>
+        
+        
+      </div>
+    </div>
+    </div>
+  <!-- Masthead -->
+  <header class="masthead text-white text-center">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-xl-9 mx-auto">
+          <h1 class="mb-5">Welcome to malaria diagnosis</h1>
+		  <h2 class="mb-5">Ready to get started? Sign up now!</h2>
+        </div>
+        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+          <form>
+            <div class="col-12">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SignUp">SignUP</button>  
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Footer -->
+  <footer class="footer bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item">
+              <a href="#">About</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Contact</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Terms of Use</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Privacy Policy</a>
+            </li>
+          </ul>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+        </div>
+        <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-facebook fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-instagram fa-2x fa-fw"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+</body>
+
+</html>
+{% endif %}
+{% endblock %}

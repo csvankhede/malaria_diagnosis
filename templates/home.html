@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Malaria Diagnosis</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="{{ url_for('static', filename='vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/simple-line-icons/css/simple-line-icons.css')}}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static', filename='css/landing-page.min.css')}}" rel="stylesheet">
+
+</head>
+
+<body>
+<header>
+  <!-- Navigation -->
+  <nav class="navbar navbar-light bg-light static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Malaria Diagnosis</a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+	  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    	  <ul>
+          <a  data-toggle="modal" data-target="#Guide">Guide</a><br>
+    	
+    	  <a  style="color:black" href="/logout">Logout</a>
+    	 
+    	  </ul>
+	  </div>
+    </div>
+  </nav>
+  <div class="modal" id="Guide">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h5>Guide to prepare slide</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+        
+        <p> The blood smear slide can be prepared by cleaning finger with 70% ethyl alcohol, then allow it to dry and then the
+		side of the fingertip is picked and a drop of blood is placed on a glass slide.
+		</p>
+		<img src="{{ url_for('static', filename='img/slides.png')}}"/>
+		<p> A thin blood film is prepared by placing
+		the smooth edge of a spreader slide at 45° and then smearing the blood with a swift and steady sweep along the
+		surface. The slide is then allowed to air dry and is fixed with absolute methanol.
+		</p>
+		<p>After drying, the sample is stained
+		with diluted Giemsa (1:20, vol/vol) for 20 min and washed by briefly dipping the slide in and out of a jar of buffered
+		water. 
+		</p>
+		<p>The slide is then allowed to air-dry in a vertical position and examined by the system with the help of a
+		microscope.
+		</p>
+
+        </div>
+        
+      </div>
+    </div>
+   </div>
+  </header>
+
+  <!-- Icons Grid -->
+  <section class="features-icons bg-white text-center showcase">
+    <div class="container">
+      <div class="row">
+          <div class="features-icons-item mx-auto">
+            <div class="features-icons-icon">
+			  <label><input id="image_selector" type="file" style="display:none" accept="image/*"/> <i class="icon-camera m-auto text-primary"><h3 style="color:black">Add Photo</h3></i>
+				</label>
+            </div><br>
+			<div class="showcase">
+			  <img id="selected_image" style="max-width:100%;max-height:100%" src= ""/> 
+			</div><br>
+			<div class="d-flex justify-content-center">
+			 <button id="predict_button" type="submit" class="btn btn-lg btn-primary">Predict</button>
+            </div><br>
+		    <div class="showcase">
+			  <img id="predicted_image" style="max-width:100%;max-height:100%" src= ""/> 
+		    </div><br>
+		    <p id="count"></p>
+          </div>
+	  </div>
+	</div>
+  </section>
+  
+
+ <script src= "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        let base64Image;
+        let predictedImage;
+        $("#image_selector").change(function(){
+        let reader = new FileReader();
+        reader.onload = function(e){
+            let dataURL = reader.result;
+            $("#selected_image").attr("src",dataURL);
+            base64Image = dataURL.replace("data:image/jpeg;base64,","");
+            console.log(base64Image);
+            }
+        reader.readAsDataURL($("#image_selector")[0].files[0]);
+        })
+        
+        $("#predict_button").click(function(){
+            let message= {
+                image: base64Image}
+            $.post("http://127.0.0.1:5000/predict",JSON.stringify(message),function(response){
+                predictedImage = `data:image/jpeg;base64,${response.predicted_image}`
+                $("#count").text(`There are ${response.count} malaria parasites found in the image.`)
+                $("#predicted_image").attr("src",predictedImage);
+                })
+            })
+        
+    
+    </script>
+
+  <!-- Footer -->
+  <footer class="footer bg-light">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+          <ul class="list-inline mb-2">
+            <li class="list-inline-item">
+              <a href="#">About</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Contact</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Terms of Use</a>
+            </li>
+            <li class="list-inline-item">&sdot;</li>
+            <li class="list-inline-item">
+              <a href="#">Privacy Policy</a>
+            </li>
+          </ul>
+          <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2019. All Rights Reserved.</p>
+        </div>
+        <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+          <ul class="list-inline mb-0">
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-facebook fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item mr-3">
+              <a href="#">
+                <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="#">
+                <i class="fab fa-instagram fa-2x fa-fw"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+</body>
+
+</html>
